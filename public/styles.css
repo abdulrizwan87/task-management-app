@@ -54,3 +54,13 @@ button:hover {
     border-bottom: 1px solid #ddd;
     padding: 10px 0;
 }
+.task, .staff {
+    padding: 0.75rem 0;
+}
+.task, .staff {
+    padding: 0.75rem 0;
+}
+
+.delete-btn, .deactivate-btn, .reactivate-btn {
+    margin-left: 0.5rem;
+}

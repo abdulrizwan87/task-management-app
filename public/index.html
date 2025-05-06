@@ -4,62 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Management App</title>
-    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="container">
-        <h1>Task Management App</h1>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="container bg-white rounded-xl shadow-lg p-6 max-w-lg w-full mx-4 sm:max-w-xl md:max-w-2xl">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Task Management App</h1>
         <div id="login" class="tab active">
-            <h2>Login</h2>
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button onclick="login()">Login</button>
-            <p id="error-message" style="color: red; display: none;"></p>
+            <h2 class="text-xl font-semibold text-center text-gray-700 mb-4">Login</h2>
+            <input type="email" id="email" placeholder="Email" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="password" id="password" placeholder="Password" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button onclick="login()" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition">Login</button>
+            <p id="error-message" class="text-red-500 text-center mt-3 hidden"></p>
+            <p class="text-center mt-4">Don't have an account? <a href="#" onclick="showTab('register')" class="text-blue-600 hover:underline">Register</a></p>
         </div>
-        <div id="staff" class="tab">
-            <h2>Staff Dashboard</h2>
-            <button onclick="logout()" class="logout-btn">Logout</button>
-            <h3>My Tasks</h3>
-            <div id="staff-tasks"></div>
-            <h3>My Profile</h3>
-            <div id="staff-profile"></div>
+        <div id="register" class="tab hidden">
+            <h2 class="text-xl font-semibold text-center text-gray-700 mb-4">Register</h2>
+            <input type="email" id="reg-email" placeholder="Email" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="text" id="reg-name" placeholder="Name" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="tel" id="reg-phone" placeholder="Phone" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="password" id="reg-password" placeholder="Password" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button onclick="register()" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition">Register</button>
+            <p id="reg-error" class="text-red-500 text-center mt-3 hidden"></p>
+            <p class="text-center mt-4">Already have an account? <a href="#" onclick="showTab('login')" class="text-blue-600 hover:underline">Login</a></p>
         </div>
-        <div id="manager" class="tab">
-            <h2>Manager Dashboard</h2>
-            <button onclick="logout()" class="logout-btn">Logout</button>
-            <h3>Assign Task</h3>
-            <input type="text" id="task-id" placeholder="Task ID (e.g., T003)" required>
-            <input type="text" id="task-desc" placeholder="Task Description" required>
-            <select id="staff-select" required></select>
-            <input type="date" id="due-date" required>
-            <select id="task-priority" required>
+        <div id="staff" class="tab hidden">
+            <h2 class="text-xl font-semibold text-center text-gray-700 mb-4">Staff Dashboard</h2>
+            <button onclick="logout()" class="w-full bg-red-600 text-white p-3 rounded-lg hover:bg-red-700 transition mb-4">Logout</button>
+            <h3 class="text-lg font-medium text-gray-600 mb-3">My Tasks</h3>
+            <div id="staff-tasks" class="space-y-3"></div>
+            <h3 class="text-lg font-medium text-gray-600 mt-6 mb-3">My Profile</h3>
+            <div id="staff-profile" class="bg-gray-50 p-4 rounded-lg"></div>
+        </div>
+        <div id="manager" class="tab hidden">
+            <h2 class="text-xl font-semibold text-center text-gray-700 mb-4">Manager Dashboard</h2>
+            <button onclick="logout()" class="w-full bg-red-600 text-white p-3 rounded-lg hover:bg-red-700 transition mb-4">Logout</button>
+            <h3 class="text-lg font-medium text-gray-600 mb-3">Assign Task</h3>
+            <input type="text" id="task-id" placeholder="Task ID (e.g., T003)" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="text" id="task-desc" placeholder="Task Description" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select id="staff-select" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
+            <input type="date" id="due-date" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select id="task-priority" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
                 <option value="High">High</option>
             </select>
-            <button onclick="assignTask()">Assign</button>
-            <h3>Task Progress</h3>
-            <div id="manager-tasks"></div>
+            <button onclick="assignTask()" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition">Assign</button>
+            <h3 class="text-lg font-medium text-gray-600 mt-6 mb-3">Task Progress</h3>
+            <div id="manager-tasks" class="space-y-3"></div>
         </div>
-        <div id="admin" class="tab">
-            <h2>Admin Dashboard</h2>
-            <button onclick="logout()" class="logout-btn">Logout</button>
-            <h3>Manage Staff</h3>
-            <input type="email" id="staff-email" placeholder="Email" required>
-            <input type="text" id="staff-name" placeholder="Name" required>
-            <select id="role-select" required>
+        <div id="admin" class="tab hidden">
+            <h2 class="text-xl font-semibold text-center text-gray-700 mb-4">Admin Dashboard</h2>
+            <button onclick="logout()" class="w-full bg-red-600 text-white p-3 rounded-lg hover:bg-red-700 transition mb-4">Logout</button>
+            <h3 class="text-lg font-medium text-gray-600 mb-3">Manage Staff</h3>
+            <input type="email" id="staff-email" placeholder="Email" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="text" id="staff-name" placeholder="Name" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select id="role-select" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option>Staff</option>
                 <option>Manager</option>
                 <option>Admin</option>
             </select>
-            <input type="tel" id="staff-phone" placeholder="Phone" required>
-            <input type="password" id="staff-password" placeholder="Password" required>
-            <button onclick="addStaff()">Add Staff</button>
-            <p id="staff-error" style="color: red; display: none;"></p>
-            <h3>All Staff</h3>
-            <div id="admin-staff"></div>
-            <h3>All Tasks</h3>
-            <div id="admin-tasks"></div>
+            <input type="tel" id="staff-phone" placeholder="Phone" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <input type="password" id="staff-password" placeholder="Password" required class="w-full p-3 mb-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button onclick="addStaff()" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition">Add Staff</button>
+            <p id="staff-error" class="text-red-500 text-center mt-3 hidden"></p>
+            <h3 class="text-lg font-medium text-gray-600 mt-6 mb-3">All Staff</h3>
+            <div id="admin-staff" class="space-y-3"></div>
+            <h3 class="text-lg font-medium text-gray-600 mt-6 mb-3">All Tasks</h3>
+            <div id="admin-tasks" class="space-y-3"></div>
         </div>
     </div>
     <script src="script.js"></script>
