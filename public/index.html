@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Task Management App</h1>
+        <div id="login" class="tab active">
+            <h2>Login</h2>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button onclick="login()">Login</button>
+            <p id="error-message" style="color: red; display: none;"></p>
+        </div>
+        <div id="staff" class="tab">
+            <h2>Staff Dashboard</h2>
+            <h3>My Tasks</h3>
+            <div id="staff-tasks"></div>
+            <h3>My Profile</h3>
+            <div id="staff-profile"></div>
+        </div>
+        <div id="manager" class="tab">
+            <h2>Manager Dashboard</h2>
+            <h3>Assign Task</h3>
+            <input type="text" id="task-id" placeholder="Task ID (e.g., T003)" required>
+            <input type="text" id="task-desc" placeholder="Task Description" required>
+            <select id="staff-select" required></select>
+            <input type="date" id="due-date" required>
+            <button onclick="assignTask()">Assign</button>
+            <h3>Task Progress</h3>
+            <div id="manager-tasks"></div>
+        </div>
+        <div id="admin" class="tab">
+            <h2>Admin Dashboard</h2>
+            <h3>Manage Staff</h3>
+            <input type="email" id="staff-email" placeholder="Email" required>
+            <input type="text" id="staff-name" placeholder="Name" required>
+            <select id="role-select" required>
+                <option>Staff</option>
+                <option>Manager</option>
+                <option>Admin</option>
+            </select>
+            <input type="tel" id="staff-phone" placeholder="Phone" required>
+            <button onclick="addStaff()">Add Staff</button>
+            <h3>All Staff</h3>
+            <div id="admin-staff"></div>
+            <h3>All Tasks</h3>
+            <div id="admin-tasks"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
