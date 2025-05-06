@@ -25,6 +25,15 @@ db.serialize(() => {
         FOREIGN KEY(assigned_to) REFERENCES staff(email)
     )`);
 
+    // Create comments table
+    db.run(`CREATE TABLE IF NOT EXISTS comments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        task_id TEXT,
+        comment TEXT,
+        created_at TEXT,
+        FOREIGN KEY(task_id) REFERENCES tasks(id)
+    )`);
+
     // Insert sample data if tables are empty
     db.get('SELECT COUNT(*) as count FROM staff', (err, row) => {
         if (row.count === 0) {
@@ -50,6 +59,17 @@ db.serialize(() => {
                 db.run(
                     'INSERT INTO tasks (id, description, assigned_to, status, due_date, priority) VALUES (?, ?, ?, ?, ?, ?)',
                     [task.id, task.description, task.assigned_to, task.status, task.due_date, task.priority]
+                );
+            });
+
+            const comments = [
+                { task_id: 'T001', comment: 'Please prioritize this task.', created_at: '2025-05-07T10:00:00' },
+                { task_id: 'T001', comment: 'Check cleaning supplies.', created_at: '2025-05-07T11:00:00' }
+            ];
+            comments.forEach(comment => {
+                db.run(
+                    'INSERT INTO comments (task_id, comment, created_at) VALUES (?, ?, ?)',
+                    [comment.task_id, comment.comment, comment.created_at]
                 );
             });
         }

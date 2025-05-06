@@ -103,6 +103,23 @@ app.put('/api/tasks/:id', (req, res) => {
     });
 });
 
+// Reassign task
+app.put('/api/tasks/reassign/:id', (req, res) => {
+    const { assigned_to } = req.body;
+    db.get('SELECT active FROM staff WHERE email = ?', [assigned_to], (err, staff) => {
+        if (err || !staff) return res.status(500).json({ error: 'Database error' });
+        if (!staff.active) return res.status(400).json({ error: 'Cannot reassign to deactivated staff' });
+        db.run(
+            'UPDATE tasks SET assigned_to = ? WHERE id = ?',
+            [assigned_to, req.params.id],
+            (err) => {
+                if (err) return res.status(500).json({ error: 'Database error' });
+                res.json({ success: true });
+            }
+        );
+    });
+});
+
 // Add staff (admin-only)
 app.post('/api/staff', (req, res) => {
     const { email, name, role, phone, password } = req.body;
@@ -148,6 +165,31 @@ app.put('/api/staff/reactivate/:email', (req, res) => {
         if (err) return res.status(500).json({ error: 'Database error' });
         res.json({ success: true });
     });
+});
+
+// Get comments for a task
+app.get('/api/comments/:task_id', (req, res) => {
+    db.all('SELECT * FROM comments WHERE task_id = ? ORDER BY created_at DESC', [req.params.task_id], (err, comments) => {
+        if (err) return res.status(500).json({ error: 'Database error' });
+        res.json(comments);
+    });
+});
+
+// Add comment
+app.post('/api/comments', (req, res) => {
+    const { task_id, comment } = req.body;
+    if (!task_id || !comment) {
+        return res.status(400).json({ error: 'Task ID and comment are required' });
+    }
+    const created_at = new Date().toISOString();
+    db.run(
+        'INSERT INTO comments (task_id, comment, created_at) VALUES (?, ?, ?)',
+        [task_id, comment, created_at],
+        (err) => {
+            if (err) return res.status(500).json({ error: 'Database error' });
+            res.json({ success: true });
+        }
+    );
 });
 
 app.listen(process.env.PORT || 3000, () => console.log('Server running'));

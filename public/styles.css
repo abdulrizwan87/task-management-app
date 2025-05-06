@@ -1,66 +1,75 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f8f9fa;
 }
-.container {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-h1, h2, h3 {
-    text-align: center;
-    color: #333;
-}
+
 .tab {
-    display: none;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.tab.active {
-    display: block;
-}
-input, select {
-    width: 100%;
-    padding: 8px;
-    margin: 5px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-button {
-    background: #007BFF;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 5px 0;
-}
-button:hover {
-    background: #0056b3;
-}
-.logout-btn {
-    background: #dc3545;
-    display: block;
-    margin: 10px auto;
-}
-.logout-btn:hover {
-    background: #c82333;
-}
-.task, .staff {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0;
-}
-.task, .staff {
-    padding: 0.75rem 0;
-}
+
 .task, .staff {
     padding: 0.75rem 0;
 }
 
-.delete-btn, .deactivate-btn, .reactivate-btn {
+.delete-btn, .deactivate-btn, .reactivate-btn, .reopen-btn, .reassign-btn {
     margin-left: 0.5rem;
+}
+
+.sidebar {
+    width: 250px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar.d-none {
+    transform: translateX(-100%);
+}
+
+@media (max-width: 767px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        width: 75%;
+        max-width: 250px;
+    }
+}
+
+.comment-list {
+    max-height: 100px;
+    overflow-y: auto;
+    margin-bottom: 0.5rem;
+}
+
+.comment-item {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.comment-input {
+    width: 100%;
+}
+
+.sort {
+    cursor: pointer;
+    user-select: none;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+}
+
+.nav-link:hover {
+    background-color: #495057;
+}
+
+.card {
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.reassign-select {
+    min-width: 150px;
 }
