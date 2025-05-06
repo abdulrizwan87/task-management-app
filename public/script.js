@@ -1,9 +1,17 @@
 let currentUser = null;
 
 function showTab(tabId) {
-    console.log(`Showing tab: ${tabId}`); // Debug log
+    console.log(`Showing tab: ${tabId}`);
     document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
+}
+
+function logout() {
+    currentUser = null;
+    showTab('login');
+    document.getElementById('email').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('error-message').style.display = 'none';
 }
 
 async function login() {
@@ -50,7 +58,7 @@ async function loadStaffTasks() {
         const tasksDiv = document.getElementById('staff-tasks');
         tasksDiv.innerHTML = tasks.map(task => `
             <div class="task">
-                ${task.description} (${task.status})
+                ${task.description} (${task.status}, Priority: ${task.priority})
                 <button onclick="updateTask('${task.id}', 'Completed')">Complete</button>
             </div>
         `).join('');
@@ -74,7 +82,7 @@ async function loadManagerTasks() {
         const tasks = await response.json();
         const tasksDiv = document.getElementById('manager-tasks');
         tasksDiv.innerHTML = tasks.map(task => `
-            <div class="task">${task.description} - ${task.assigned_to} (${task.status})</div>
+            <div class="task">${task.description} - ${task.assigned_to} (${task.status}, Priority: ${task.priority})</div>
         `).join('');
     } catch (err) {
         console.error('Error loading manager tasks:', err);
@@ -97,11 +105,12 @@ async function assignTask() {
     const description = document.getElementById('task-desc').value;
     const assigned_to = document.getElementById('staff-select').value;
     const due_date = document.getElementById('due-date').value;
+    const priority = document.getElementById('task-priority').value;
     try {
         const response = await fetch('/api/tasks', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id, description, assigned_to, due_date })
+            body: JSON.stringify({ id, description, assigned_to, due_date, priority })
         });
         const data = await response.json();
         if (data.success) {
@@ -149,7 +158,7 @@ async function loadAdminTasks() {
         const tasks = await response.json();
         const tasksDiv = document.getElementById('admin-tasks');
         tasksDiv.innerHTML = tasks.map(task => `
-            <div class="task">${task.description} - ${task.assigned_to} (${task.status})</div>
+            <div class="task">${task.description} - ${task.assigned_to} (${task.status}, Priority: ${task.priority})</div>
         `).join('');
     } catch (err) {
         console.error('Error loading admin tasks:', err);
@@ -161,19 +170,32 @@ async function addStaff() {
     const name = document.getElementById('staff-name').value;
     const role = document.getElementById('role-select').value;
     const phone = document.getElementById('staff-phone').value;
+    const password = document.getElementById('staff-password').value;
+    const errorMessage = document.getElementById('staff-error');
+    errorMessage.style.display = 'none';
+
     try {
         const response = await fetch('/api/staff', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, name, role, phone })
+            body: JSON.stringify({ email, name, role, phone, password })
         });
         const data = await response.json();
-        if (data.success) {
-            loadAdminStaff();
-            alert('Staff added!');
+        if (data.error) {
+            errorMessage.textContent = data.error;
+            errorMessage.style.display = 'block';
+            return;
         }
+        loadAdminStaff();
+        alert('Staff added!');
+        document.getElementById('staff-email').value = '';
+        document.getElementById('staff-name').value = '';
+        document.getElementById('staff-phone').value = '';
+        document.getElementById('staff-password').value = '';
     } catch (err) {
         console.error('Error adding staff:', err);
+        errorMessage.textContent = 'Network error. Please try again.';
+        errorMessage.style.display = 'block';
     }
 }
 

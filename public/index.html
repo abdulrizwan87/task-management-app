@@ -18,6 +18,7 @@
         </div>
         <div id="staff" class="tab">
             <h2>Staff Dashboard</h2>
+            <button onclick="logout()" class="logout-btn">Logout</button>
             <h3>My Tasks</h3>
             <div id="staff-tasks"></div>
             <h3>My Profile</h3>
@@ -25,17 +26,24 @@
         </div>
         <div id="manager" class="tab">
             <h2>Manager Dashboard</h2>
+            <button onclick="logout()" class="logout-btn">Logout</button>
             <h3>Assign Task</h3>
             <input type="text" id="task-id" placeholder="Task ID (e.g., T003)" required>
             <input type="text" id="task-desc" placeholder="Task Description" required>
             <select id="staff-select" required></select>
             <input type="date" id="due-date" required>
+            <select id="task-priority" required>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </select>
             <button onclick="assignTask()">Assign</button>
             <h3>Task Progress</h3>
             <div id="manager-tasks"></div>
         </div>
         <div id="admin" class="tab">
             <h2>Admin Dashboard</h2>
+            <button onclick="logout()" class="logout-btn">Logout</button>
             <h3>Manage Staff</h3>
             <input type="email" id="staff-email" placeholder="Email" required>
             <input type="text" id="staff-name" placeholder="Name" required>
@@ -45,7 +53,9 @@
                 <option>Admin</option>
             </select>
             <input type="tel" id="staff-phone" placeholder="Phone" required>
+            <input type="password" id="staff-password" placeholder="Password" required>
             <button onclick="addStaff()">Add Staff</button>
+            <p id="staff-error" style="color: red; display: none;"></p>
             <h3>All Staff</h3>
             <div id="admin-staff"></div>
             <h3>All Tasks</h3>

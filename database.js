@@ -23,6 +23,7 @@ db.serialize(() => {
             assigned_to TEXT,
             status TEXT,
             due_date TEXT,
+            priority TEXT,
             FOREIGN KEY (assigned_to) REFERENCES staff(email)
         )
     `);
@@ -39,16 +40,20 @@ db.serialize(() => {
     );
     db.run(
         'INSERT OR IGNORE INTO staff (email, name, password, role, phone) VALUES (?, ?, ?, ?, ?)',
-        ['admin@example.com', 'Admin User', password, 'Admin', '555-555-5555']
+        ['admin1@example.com', 'Admin One', password, 'Admin', '555-555-5555']
+    );
+    db.run(
+        'INSERT OR IGNORE INTO staff (email, name, password, role, phone) VALUES (?, ?, ?, ?, ?)',
+        ['admin2@example.com', 'Admin Two', password, 'Admin', '555-555-5556']
     );
 
     db.run(
-        'INSERT OR IGNORE INTO tasks (id, description, assigned_to, status, due_date) VALUES (?, ?, ?, ?, ?)',
-        ['T001', 'Clean Room 101', 'john@example.com', 'Pending', '2025-05-10']
+        'INSERT OR IGNORE INTO tasks (id, description, assigned_to, status, due_date, priority) VALUES (?, ?, ?, ?, ?, ?)',
+        ['T001', 'Clean Room 101', 'john@example.com', 'Pending', '2025-05-10', 'High']
     );
     db.run(
-        'INSERT OR IGNORE INTO tasks (id, description, assigned_to, status, due_date) VALUES (?, ?, ?, ?, ?)',
-        ['T002', 'Restock Supplies', 'jane@example.com', 'Completed', '2025-05-08']
+        'INSERT OR IGNORE INTO tasks (id, description, assigned_to, status, due_date, priority) VALUES (?, ?, ?, ?, ?, ?)',
+        ['T002', 'Restock Supplies', 'jane@example.com', 'Completed', '2025-05-08', 'Medium']
     );
 });
 

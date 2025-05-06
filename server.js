@@ -44,10 +44,10 @@ app.get('/api/staff', (req, res) => {
 
 // Add task
 app.post('/api/tasks', (req, res) => {
-    const { id, description, assigned_to, due_date } = req.body;
+    const { id, description, assigned_to, due_date, priority } = req.body;
     db.run(
-        'INSERT INTO tasks (id, description, assigned_to, status, due_date) VALUES (?, ?, ?, ?, ?)',
-        [id, description, assigned_to, 'Pending', due_date],
+        'INSERT INTO tasks (id, description, assigned_to, status, due_date, priority) VALUES (?, ?, ?, ?, ?, ?)',
+        [id, description, assigned_to, 'Pending', due_date, priority],
         (err) => {
             if (err) return res.status(500).json({ error: 'Database error' });
             res.json({ success: true });
@@ -70,11 +70,14 @@ app.put('/api/tasks/:id', (req, res) => {
 
 // Add staff
 app.post('/api/staff', (req, res) => {
-    const { email, name, role, phone } = req.body;
-    const password = bcrypt.hashSync('password123', 10);
+    const { email, name, role, phone, password } = req.body;
+    if (!password) {
+        return res.status(400).json({ error: 'Password is required' });
+    }
+    const hashedPassword = bcrypt.hashSync(password, 10);
     db.run(
         'INSERT INTO staff (email, name, password, role, phone) VALUES (?, ?, ?, ?, ?)',
-        [email, name, password, role, phone],
+        [email, name, hashedPassword, role, phone],
         (err) => {
             if (err) return res.status(500).json({ error: 'Database error' });
             res.json({ success: true });
@@ -82,4 +85,4 @@ app.post('/api/staff', (req, res) => {
     );
 });
 
-app.listen(3000, () => console.log('Server running on http://localhost:3000'));
+app.listen(process.env.PORT || 3000, () => console.log('Server running'));

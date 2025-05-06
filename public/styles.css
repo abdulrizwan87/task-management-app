@@ -42,6 +42,14 @@ button {
 button:hover {
     background: #0056b3;
 }
+.logout-btn {
+    background: #dc3545;
+    display: block;
+    margin: 10px auto;
+}
+.logout-btn:hover {
+    background: #c82333;
+}
 .task, .staff {
     border-bottom: 1px solid #ddd;
     padding: 10px 0;
