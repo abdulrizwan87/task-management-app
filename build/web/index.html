@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container py-4">
+        <div id="login" class="tab">
+            <div class="card mx-auto" style="max-width: 500px;">
+                <div class="card-body p-4">
+                    <h1 class="card-title text-center mb-4">Task Management App</h1>
+                    <h2 class="h5 text-center mb-4">Login</h2>
+                    <input type="email" id="email" class="form-control mb-3" placeholder="Email" required>
+                    <div class="input-group mb-3">
+                        <input type="password" id="password" class="form-control" placeholder="Password" required>
+                        <button type="button" class="btn btn-outline-secondary password-toggle" onclick="togglePassword('password')">
+                            <svg class="bi password-icon" width="16" height="16" fill="currentColor">
+                                <use xlink:href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css#eye"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <button onclick="login()" class="btn btn-primary w-100">Login</button>
+                    <p id="error-message" class="text-danger text-center mt-3 d-none"></p>
+                    <p class="text-center mt-3">Don't have an account? <a href="#" onclick="showTab('register')" class="text-primary">Register</a></p>
+                </div>
+            </div>
+        </div>
+        <div id="register" class="tab d-none">
+            <div class="card mx-auto" style="max-width: 500px;">
+                <div class="card-body p-4">
+                    <h1 class="card-title text-center mb-4">Task Management App</h1>
+                    <h2 class="h5 text-center mb-4">Register</h2>
+                    <input type="email" id="reg-email" class="form-control mb-3" placeholder="Email" required>
+                    <input type="text" id="reg-name" class="form-control mb-3" placeholder="Name" required>
+                    <input type="tel" id="reg-phone" class="form-control mb-3" placeholder="Phone" required>
+                    <select id="reg-department" class="form-select mb-3" required>
+                        <option value="" disabled selected>Select Department</option>
+                        <option value="Housekeeping">Housekeeping</option>
+                        <option value="Electrical">Electrical</option>
+                        <option value="Plumbing">Plumbing</option>
+                    </select>
+                    <div class="input-group mb-3">
+                        <input type="password" id="reg-password" class="form-control" placeholder="Password" required>
+                        <button type="button" class="btn btn-outline-secondary password-toggle" onclick="togglePassword('reg-password')">
+                            <svg class="bi password-icon" width="16" height="16" fill="currentColor">
+                                <use xlink:href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css#eye"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <button onclick="register()" class="btn btn-primary w-100">Register</button>
+                    <p id="reg-error" class="text-danger text-center mt-3 d-none"></p>
+                    <p class="text-center mt-3">Already have an account? <a href="#" onclick="showTab('login')" class="text-primary">Login</a></p>
+                </div>
+            </div>
+        </div>
+        <div id="staff" class="tab d-none">
+            <div class="card mx-auto" style="max-width: 500px;">
+                <div class="card-body p-4">
+                    <h2 class="h5 text-center mb-4">Staff Dashboard</h2>
+                    <button onclick="logout()" class="btn btn-danger w-100 mb-4">Logout</button>
+                    <h3 class="h6 mb-3">My Tasks</h3>
+                    <div id="staff-tasks" class="mb-4"></div>
+                    <h3 class="h6 mb-3">My Profile</h3>
+                    <div id="staff-profile" class="card p-3"></div>
+                </div>
+            </div>
+        </div>
+        <div id="manager" class="tab d-none">
+            <div class="d-flex">
+                <!-- Sidebar -->
+                <div id="manager-sidebar" class="bg-dark text-white vh-100 p-3 d-none d-md-block sidebar">
+                    <div class="d-flex align-items-center mb-4">
+                        <h2 class="h5 mb-0">Manager Dashboard</h2>
+                        <button id="manager-sidebar-toggle" class="btn btn-outline-light ms-auto d-md-none">
+                            <svg class="bi" width="24" height="24" fill="currentColor">
+                                <use xlink:href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css#x"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <nav class="nav flex-column">
+                        <a href="#" onclick="showManagerView('assign')" class="nav-link text-white d-flex align-items-center py-2 px-3 mb-2 rounded hover-bg-dark">
+                            <svg class="bi me-2" width="24" height="24" fill="currentColor">
+                                <use xlink:href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css#plus-circle"/>
+                            </svg>
+                            Assign Task
+                        </a>
+                        <a href="#" onclick="showManagerView('tasks')" class="nav-link text-white d-flex align-items-center py-2 px-3 mb-2 rounded hover-bg-dark">
+                            <svg class="bi me-2" width="24" height="24" fill="currentColor">
+                                <use xlink:href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css#list-task"/>
+                            </svg>
+                            Task Progress
+                        </a>
+                    </nav>
+                    <button onclick="logout()" class="btn btn-danger w-100 mt-auto">Logout</button>
+                </div>
+                <!-- Mobile Sidebar Toggle -->
+                <div class="d-md-none position-fixed top-0 start-0 p-3 z-50">
+                    <button id="manager-mobile-sidebar-toggle" class="btn btn-dark">
+                        <svg class="bi" width="24" height="24" fill="currentColor">
+                            <use xlink:href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css#list"/>
+                        </svg>
+                    </button>
+                </div>
+                <!-- Main Content -->
+                <div class="flex-grow-1 p-3">
+                    <div id="manager-assign" class="manager-view">
+                        <h3 class="h6 mb-3">Assign Task</h3>
+                        <input type="text" id="task-id" class="form-control mb-3" placeholder="Task ID (e.g., T004)" required>
+                        <input type="text" id="task-desc" class="form-control mb-3" placeholder="Task Description" required>
+                        <select id="staff-select" class="form-select mb-3" required></select>
+                        <input type="date" id="due-date" class="form-control mb-3" required>
+                        <select id="task-priority" class="form-select mb-3" required>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                        <button onclick="assignTask()" class="btn btn-primary w-100">Assign</button>
+                    </div>
+                    <div id="manager-tasks" class="manager-view d-none">
+                        <h3 class="h6 mb-3">Task Progress</h3>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col" class="sort" onclick="sortManagerTasks('name')">User Name</th>
+                                        <th scope="col" class="sort" onclick="sortManagerTasks('department')">Department</th>
+                                        <th scope="col" class="sort" onclick="sortManagerTasks('description')">Task</th>
+                                        <th scope="col" class="sort" onclick="sortManagerTasks('due_date')">Due Date</th>
+                                        <th scope="col" class="sort" onclick="sortManagerTasks('status')">Status</th>
+                                        <th scope="col">Comments</th>
+                                        <th scope="col">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="manager-tasks-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="admin" class="tab d-none">
+            <div class="d-flex">
+                <!-- Sidebar -->
+                <div id="sidebar" class="bg-dark text-white vh-100 p-3 d-none d-md-block sidebar">
+                    <div class="d-flex align-items-center mb-4">
+                        <h2 class="h5 mb-0">Admin Dashboard</h2>
+                        <button id="sidebar-toggle" class="btn btn-outline-light ms-auto d-md-none">
+                            <svg class="bi" width="24" height="24" fill="currentColor">
+                                <use xlink:href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css#x"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <nav class="nav flex-column">
+                        <a href="#" onclick="showAdminView('users')" class="nav-link text-white d-flex align-items-center py-2 px-3 mb-2 rounded hover-bg-dark">
+                            <svg class="bi me-2" width="24" height="24" fill="currentColor">
+                                <use xlink:href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css#people"/>
+                            </svg>
+                            Users
+                        </a>
+                        <a href="#" onclick="showAdminView('tasks')" class="nav-link text-white d-flex align-items-center py-2 px-3 mb-2 rounded hover-bg-dark">
+                            <svg class="bi me-2" width="24" height="24" fill="currentColor">
+                                <use xlink:href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css#list-task"/>
+                            </svg>
+                            Tasks
+                        </a>
+                    </nav>
+                    <button onclick="logout()" class="btn btn-danger w-100 mt-auto">Logout</button>
+                </div>
+                <!-- Mobile Sidebar Toggle -->
+                <div class="d-md-none position-fixed top-0 start-0 p-3 z-50">
+                    <button id="mobile-sidebar-toggle" class="btn btn-dark">
+                        <svg class="bi" width="24" height="24" fill="currentColor">
+                            <use xlink:href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css#list"/>
+                        </svg>
+                    </button>
+                </div>
+                <!-- Main Content -->
+                <div class="flex-grow-1 p-3">
+                    <div id="admin-users" class="admin-view">
+                        <h3 class="h6 mb-3">Manage Staff</h3>
+                        <input type="email" id="staff-email" class="form-control mb-3" placeholder="Email" required>
+                        <input type="text" id="staff-name" class="form-control mb-3" placeholder="Name" required>
+                        <select id="role-select" class="form-select mb-3" required>
+                            <option>Staff</option>
+                            <option>Manager</option>
+                            <option>Admin</option>
+                        </select>
+                        <input type="tel" id="staff-phone" class="form-control mb-3" placeholder="Phone" required>
+                        <select id="staff-department" class="form-select mb-3" required>
+                            <option value="" disabled selected>Select Department</option>
+                            <option value="Housekeeping">Housekeeping</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Plumbing">Plumbing</option>
+                        </select>
+                        <div class="input-group mb-3">
+                            <input type="password" id="staff-password" class="form-control" placeholder="Password" required>
+                            <button type="button" class="btn btn-outline-secondary password-toggle" onclick="togglePassword('staff-password')">
+                                <svg class="bi password-icon" width="16" height="16" fill="currentColor">
+                                    <use xlink:href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css#eye"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <button onclick="addStaff()" class="btn btn-primary w-100">Add Staff</button>
+                        <p id="staff-error" class="text-danger text-center mt-3 d-none"></p>
+                        <h3 class="h6 mt-4 mb-3">All Staff</h3>
+                        <div id="admin-staff"></div>
+                    </div>
+                    <div id="admin-tasks" class="admin-view d-none">
+                        <h3 class="h6 mb-3">All Tasks</h3>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col" class="sort" onclick="sortTasks('name')">User Name</th>
+                                        <th scope="col" class="sort" onclick="sortTasks('department')">Department</th>
+                                        <th scope="col" class="sort" onclick="sortTasks('description')">Task</th>
+                                        <th scope="col" class="sort" onclick="sortTasks('due_date')">Due Date</th>
+                                        <th scope="col" class="sort" onclick="sortTasks('status')">Status</th>
+                                        <th scope="col">Comments</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-tasks-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
